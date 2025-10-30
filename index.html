@@ -1,0 +1,112 @@
+Bode owner:
+num = [0 100];
+den1 = conv([1 0],[0.1 1]);
+den = conv([den1],[0.001 1]);
+G = tf(num,den);
+a = -3;
+b = 3;
+w =logspace(a,b);
+bode(G,w);
+grid on;
+[GM,PM,PCF,GCF] = margin(G)
+
+
+
+%nyqusit 
+num = [1 2]
+den = [1 0 -1]
+A = tf(num,den);
+nyquist(A)
+grid on;
+axis equal;
+
+w= [0 0.5 1 10]
+
+for i = 1:length(w)
+    var = evalfr(A,1j*w(i));
+    fprintf('At W = %.2f rad/sec: Real = %.4f, imag = %.4f\n',w(i),real(var),imag(var));
+end
+
+
+Root locus 
+
+num = [0 1]
+den = [2 3 1 0]
+G = tf(num,den);
+[Gm,Pm,Wcg,Wcp] = margin(G)
+disp(['Gain margin:',num2str(Gm)]);
+Gm_db = 20*log10(Gm)
+disp(['Gain margin in db:',num2str(Gm_db)]);
+disp(['phase margin:',num2str(Pm)]);
+W = [0.5 1 10];
+[re,img] = nyquist(G,W)
+re = squeeze(re);
+img = squeeze(img);
+r = sqrt(re.^2+img.^2);
+tetha = angle(re + 1j*img)
+figure;
+polar(tetha,r,'o-')
+title("ploar plot")
+for K = 1:length(W)
+    fprintf('w = %.2f ---> mag = %.4f ---> angle = %.4f\n',W(K),re(K),tetha(K)*180/pi);
+end
+
+
+
+time responses 
+
+num = [25];
+den = [1 6 25];
+sys = tf( num , den );
+step(sys);
+
+%calculation:
+Wn = sqrt(num);
+ep = den(2)/(2*Wn);
+Wd = Wn*sqrt(1-ep^2);
+%1. find the tetha value
+tetha = atan(sqrt(1-ep^2)/ep);
+disp(['tetha: ', num2str(tetha)]);
+%2.find the rise time
+R_time = (pi - tetha)/Wd;
+disp(['Rise time: ', num2str(R_time)]);
+%3.peaktime
+P_time = pi/Wd;
+disp(['Peak time: ', num2str(P_time)]);
+%3.maximum peak overshooty
+Mp = exp((-ep*pi)/sqrt(1-ep^2))*100;
+disp(['Maximum peak overshoot: ', num2str(Mp),'%']);
+%4.setting time
+tc = 1/(ep*Wn);
+disp(['time_constant: ', num2str(tc)]);
+disp(['settling time for 2% error: ', num2str(4*tc)]);
+disp(['settling time for 5% error: ', num2str(3*tc)]);
+
+
+% Compute Steady-State Error (for unit step input)
+  % simulate response
+%rise time 
+
+
+
+Polar owner 
+num = [0 1]
+den = [2 3 1 0]
+G = tf(num,den);
+[Gm,Pm,Wcg,Wcp] = margin(G)
+disp(['Gain margin:',num2str(Gm)]);
+Gm_db = 20*log10(Gm)
+disp(['Gain margin in db:',num2str(Gm_db)]);
+disp(['phase margin:',num2str(Pm)]);
+W = [0.5 1 10];
+[re,img] = nyquist(G,W)
+re = squeeze(re);
+img = squeeze(img);
+r = sqrt(re.^2+img.^2);
+tetha = angle(re + 1j*img)
+figure;
+polar(tetha,r,'o-')
+title("ploar plot")
+for K = 1:length(W)
+    fprintf('w = %.2f ---> mag = %.4f ---> angle = %.4f\n',W(K),re(K),tetha(K)*180/pi);
+end
