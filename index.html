@@ -28,6 +28,7 @@ for i = 1:length(w)
 end
 
 
+
 %Root locus 
 num = [0 1];
 dem = [1 6 8 0];
@@ -85,13 +86,9 @@ disp(['settling time for 2% error: ', num2str(4*tc)]);
 disp(['settling time for 5% error: ', num2str(3*tc)]);
 
 
-% Compute Steady-State Error (for unit step input)
-  % simulate response
-%rise time 
 
 
-
-Polar owner 
+Polar plot 
 num = [0 1]
 den = [2 3 1 0]
 G = tf(num,den);
