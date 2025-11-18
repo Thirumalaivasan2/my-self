@@ -29,28 +29,38 @@ end
 
 
 Root locus 
+num = [0 1];
+dem = [1 6 8 0];
+sys = tf(num, dem);
 
-num = [0 1]
-den = [2 3 1 0]
-G = tf(num,den);
-[Gm,Pm,Wcg,Wcp] = margin(G)
-disp(['Gain margin:',num2str(Gm)]);
-Gm_db = 20*log10(Gm)
-disp(['Gain margin in db:',num2str(Gm_db)]);
-disp(['phase margin:',num2str(Pm)]);
-W = [0.5 1 10];
-[re,img] = nyquist(G,W)
-re = squeeze(re);
-img = squeeze(img);
-r = sqrt(re.^2+img.^2);
-tetha = angle(re + 1j*img)
-figure;
-polar(tetha,r,'o-')
-title("ploar plot")
-for K = 1:length(W)
-    fprintf('w = %.2f ---> mag = %.4f ---> angle = %.4f\n',W(K),re(K),tetha(K)*180/pi);
-end
+% Plot root locus
+rlocus(sys)
+grid on;
+title('Root Locus of the Given System')
 
+% Poles and zeros
+p = pole(sys);
+z = zero(sys);
+disp('Poles:'); 
+disp(p)
+disp('Zeros:'); 
+disp(z)
+
+% Centroid and asymptotis
+n = length(p);
+m = length(z);
+centroid = (sum(p) - sum(z))/(n-m);
+theta = (2*(0:(n-m-1))+1)*180/(n-m);
+disp(['Centroid: ', num2str(centroid)])
+disp('Asymptote angles:');
+disp(theta)
+
+% Breakaway points
+syms s
+K = poly2sym(dem,s)/poly2sym(num,s);
+dK_ds = diff(K,s);
+break_points = double(solve(dK_ds==0));
+disp('Breakaway points:'); disp(break_points)
 
 
 time responses 
